@@ -1,17 +1,37 @@
 const mongoose = require('mongoose');
 
 const contentSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    contentType: { type: String, enum: ['video', 'pdf'], required: true },
-    originalFileName: { type: String, required: true },
-    fileUrl: { type: String, required: true }, // URL if stored in S3/Cloudinary
-    transcript: { type: String }, // Processed transcript
-    summary: { type: String }, // Summarized text
-    translation: { type: String }, // Translated text
-    language: { type: String, default: 'en' },
-    createdAt: { type: Date, default: Date.now },
-    status: { type: String, enum: ['pending', 'completed', 'failed'], default: 'pending' },
-  });
-  
-  module.exports = mongoose.model('Content', contentSchema);
-  
+  title: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: ['pdf', 'youtube'],
+    required: true,
+  },
+  contentUrl: {
+    type: String,
+    required: true,  // For PDFs: path to the file, For YouTube: YouTube video ID or URL
+  },
+  transcript: {
+    type: String, // This will store the transcribed text if applicable
+    default: '',
+  },
+  translation: {
+    type: String, // Store the translated content if applicable
+    default: '',
+  },
+  summary: {
+    type: String, // Store the summarized content
+    default: '',
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+const Content = mongoose.model('Content', contentSchema);
+
+module.exports = Content;
