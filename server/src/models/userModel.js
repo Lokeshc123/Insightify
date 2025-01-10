@@ -12,6 +12,14 @@ const userSchema = new mongoose.Schema({
     unique: true,
     match: [/\S+@\S+\.\S+/, "Please enter a valid email address"],
   },
+  resetPasswordToken: {
+    type: String,
+    default: null,
+  },
+  resetPasswordExpire: {
+    type: Date,
+    default: null,
+  },
   isEmailVerified: {
     type: Boolean,
     default: false,
