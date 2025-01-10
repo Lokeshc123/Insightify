@@ -44,6 +44,12 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  contents: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Content", // Reference the Content schema
+    },
+  ],
 });
 
 // Hash the password before saving to the database

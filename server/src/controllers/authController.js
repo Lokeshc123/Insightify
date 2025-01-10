@@ -3,9 +3,10 @@
 const User = require("../models/userModel");
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
-const generateToken = require("../services/authService");
+
 const { sendEmail, emailTemplates } = require("../services/emailService");
 const CustomError = require("../utils/customError");
+const { generateToken } = require("../services/authService");
 
 // Register a new user
 
@@ -35,6 +36,9 @@ const register = async (req, res, next) => {
       emailTemplates.verificationEmail(verification_code)
     );
     const jwt_token = generateToken(newUser._id);
+    if (!jwt_token) {
+      return next(new CustomError(500, "Token generation failed"));
+    }
     res.cookie("authToken", jwt_token, {
       httpOnly: true,
       sameSite: "strict",
@@ -197,6 +201,25 @@ const changePassword = async (req, res, next) => {
     next(error);
   }
 };
+// Get user profile
+
+const getUserProfile = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id).select(
+      "-password -verificationToken -verificationTokenExpiry -resetPasswordToken -resetPasswordExpire"
+    );
+    if (!user) {
+      return next(new CustomError(404, "User not found"));
+    }
+    res.status(200).json({
+      success: true,
+      message: "User profile",
+      user: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   register,
@@ -205,4 +228,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   changePassword,
+  getUserProfile,
 };
