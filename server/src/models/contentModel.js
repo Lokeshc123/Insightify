@@ -3,33 +3,24 @@ const mongoose = require("mongoose");
 const contentSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Reference the User schema
+    ref: "User", // Reference to User schema
     required: true,
   },
-  title: {
+
+  contentType: {
     type: String,
+    enum: ["pdf", "youtube"], // The type of content (either pdf or youtube)
     required: true,
   },
-  type: {
+  status: {
     type: String,
-    enum: ["pdf", "youtube"],
+    enum: ["queued", "processing", "processed"], // Status of the content processing
+    default: "queued", // Default status when new content is added
+  },
+  contentDetails: {
+    type: mongoose.Schema.Types.ObjectId, // Reference to either PDFContent or YouTubeContent
+    refPath: "contentType", // Dynamically determines the reference based on contentType
     required: true,
-  },
-  contentUrl: {
-    type: String,
-    required: true, // For PDFs: path to the file, For YouTube: YouTube video ID or URL
-  },
-  transcript: {
-    type: String, // This will store the transcribed text if applicable
-    default: "",
-  },
-  translation: {
-    type: String, // Store the translated content if applicable
-    default: "",
-  },
-  summary: {
-    type: String, // Store the summarized content
-    default: "",
   },
   createdAt: {
     type: Date,
