@@ -1,8 +1,11 @@
-const app = require("./app");
 const dotenv = require("dotenv");
-const connectDb = require("./config/db");
 dotenv.config();
+const app = require("./app");
+const connectDb = require("./config/db");
+const cloudinary = require("./config/cloudnary");
+
 connectDb();
+cloudinary.config();
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const youtubeContentSchema = new mongoose.Schema({
-  videoId: {
-    type: String,
-    required: true, // YouTube video ID
-  },
   videoUrl: {
     type: String,
     required: true, // Full URL to the YouTube video
